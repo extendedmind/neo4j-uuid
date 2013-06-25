@@ -6,3 +6,10 @@
 *.iml
 *.ipr
 *.iws
+.project
+.classpath
+.cache
+.settings/
+.externalToolBuilders
+
+
