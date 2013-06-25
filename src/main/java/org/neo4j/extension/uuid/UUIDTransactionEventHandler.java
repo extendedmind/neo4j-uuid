@@ -1,7 +1,6 @@
 package org.neo4j.extension.uuid;
 
 import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.UUIDGenerator;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.event.PropertyEntry;
@@ -17,14 +16,14 @@ import java.util.UUID;
  *     <li>rejects any modification to pre-existing uuids</li>
  * </ul>
  */
-public class UUIDTransactionEventHandler implements TransactionEventHandler {
+public class UUIDTransactionEventHandler<T> implements TransactionEventHandler<T> {
 
     public static final String UUID_PROPERTY_NAME = "uuid";
 
     private final TimeBasedGenerator uuidGenerator = Generators.timeBasedGenerator();
 
     @Override
-    public Object beforeCommit(TransactionData data) throws Exception {
+    public T beforeCommit(TransactionData data) throws Exception {
 
         checkForUuidChanges(data.removedNodeProperties(), "remove");
         checkForUuidChanges(data.assignedNodeProperties(), "assign");

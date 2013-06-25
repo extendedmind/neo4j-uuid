@@ -23,7 +23,7 @@ public class UUIDPluginLifecycle implements PluginLifecycle {
         IndexManager indexManager = graphDatabaseService.index();
         setupUUIDIndexing(indexManager.getNodeAutoIndexer());
         setupUUIDIndexing(indexManager.getRelationshipAutoIndexer());
-        graphDatabaseService.registerTransactionEventHandler(new UUIDTransactionEventHandler());
+        graphDatabaseService.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>());
         return Collections.emptySet();
     }
 
