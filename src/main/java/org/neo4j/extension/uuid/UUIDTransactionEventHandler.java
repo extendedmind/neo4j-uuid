@@ -1,13 +1,13 @@
 package org.neo4j.extension.uuid;
 
-import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.impl.TimeBasedGenerator;
+import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.event.PropertyEntry;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * a {@see TransactionEventHandler} that
@@ -20,20 +20,28 @@ public class UUIDTransactionEventHandler<T> implements TransactionEventHandler<T
 
     public static final String UUID_PROPERTY_NAME = "uuid";
 
-    private final TimeBasedGenerator uuidGenerator = Generators.timeBasedGenerator();
-
+    private Logger logger = Logger.getLogger("org.neo4j"); 
+    
+    public UUIDTransactionEventHandler(){
+      System.out.println("UUIDTransactionEventHandler.UUIDTransactionEventHandler");
+    }
+    
     @Override
     public T beforeCommit(TransactionData data) throws Exception {
-
-        checkForUuidChanges(data.removedNodeProperties(), "remove");
-        checkForUuidChanges(data.assignedNodeProperties(), "assign");
-        checkForUuidChanges(data.removedRelationshipProperties(), "remove");
-        checkForUuidChanges(data.assignedRelationshipProperties(), "assign");
-
-        populateUuidsFor(data.createdNodes());
-        populateUuidsFor(data.createdRelationships());
-
-        return null;
+      System.out.println("UUIDTransactionEventHandler.beforeCommit start");
+      checkForUuidChanges(data.removedNodeProperties(), "remove");
+      checkForUuidChanges(data.assignedNodeProperties(), "assign");
+      checkForUuidChanges(data.removedRelationshipProperties(), "remove");
+      checkForUuidChanges(data.assignedRelationshipProperties(), "assign");
+      Iterable<Node> createdNodes = data.createdNodes();      
+      for (Node node : createdNodes){
+        System.out.println("NODE FOUND");        
+      }
+      populateUuidsFor(data.createdNodes());
+      populateUuidsFor(data.createdRelationships());
+      System.out.println("UUIDTransactionEventHandler.beforeCommit end");
+      
+      return null;
     }
 
     @Override
@@ -48,10 +56,15 @@ public class UUIDTransactionEventHandler<T> implements TransactionEventHandler<T
      * @param propertyContainers set UUID property for a iterable on nodes or relationships
      */
     private void populateUuidsFor(Iterable<? extends PropertyContainer> propertyContainers) {
-        for (PropertyContainer propertyContainer : propertyContainers) {
-            if (!propertyContainer.hasProperty(UUID_PROPERTY_NAME)) {
+      	System.out.println("UUIDTransactionEventHandler.populateUuidsFor");
 
-                final UUID uuid = uuidGenerator.generate();
+        for (PropertyContainer propertyContainer : propertyContainers) {
+            System.out.println("UUIDTransactionEventHandler.populateUuidsFor looping");
+
+            if (!propertyContainer.hasProperty(UUID_PROPERTY_NAME)) {
+                System.out.println("UUIDTransactionEventHandler.populateUuidsFor creating UUID");
+
+                final UUID uuid = UUID.randomUUID();
                 final StringBuilder sb = new StringBuilder();
                 sb.append(Long.toHexString(uuid.getMostSignificantBits())).append(Long.toHexString(uuid.getLeastSignificantBits()));
 
@@ -61,7 +74,9 @@ public class UUIDTransactionEventHandler<T> implements TransactionEventHandler<T
     }
 
     private void checkForUuidChanges(Iterable<? extends PropertyEntry<? extends PropertyContainer>> changeList, String action) {
-        for (PropertyEntry<? extends PropertyContainer> removedProperty : changeList) {
+    	System.out.println("UUIDTransactionEventHandler.checkForUuidChanges");
+
+    	for (PropertyEntry<? extends PropertyContainer> removedProperty : changeList) {
             if (removedProperty.key().equals(UUID_PROPERTY_NAME)) {
                 throw new IllegalStateException("you are not allowed to " + action + " " + UUID_PROPERTY_NAME + " properties");
             }

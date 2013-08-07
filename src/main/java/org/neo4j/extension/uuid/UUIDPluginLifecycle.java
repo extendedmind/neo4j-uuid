@@ -16,14 +16,20 @@ import java.util.Collections;
  */
 public class UUIDPluginLifecycle implements PluginLifecycle {
     public UUIDPluginLifecycle() {
+    	System.out.println("UUIDPluginLifecycle.UUIDPluginLifecycle");
     }
 
     @Override
     public Collection<Injectable<?>> start(GraphDatabaseService graphDatabaseService, Configuration config) {
+    		System.out.println("UUIDPluginLifecycle.start begin");
+
         IndexManager indexManager = graphDatabaseService.index();
         setupUUIDIndexing(indexManager.getNodeAutoIndexer());
         setupUUIDIndexing(indexManager.getRelationshipAutoIndexer());
         graphDatabaseService.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>());
+
+        System.out.println("UUIDPluginLifecycle.start end");
+
         return Collections.emptySet();
     }
 
@@ -35,5 +41,6 @@ public class UUIDPluginLifecycle implements PluginLifecycle {
     void setupUUIDIndexing(AutoIndexer<? extends PropertyContainer> autoIndexer) {
         autoIndexer.startAutoIndexingProperty(UUIDTransactionEventHandler.UUID_PROPERTY_NAME);
         autoIndexer.setEnabled(true);
+        System.out.println("UUIDPluginLifecycle.setupUUIDIndexing");
     }
 }
