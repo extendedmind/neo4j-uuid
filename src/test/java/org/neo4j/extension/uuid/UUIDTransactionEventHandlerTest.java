@@ -20,12 +20,14 @@ public class UUIDTransactionEventHandlerTest {
     node.setProperty("test", "test");
     long id = node.getId();
     tx.success();
-
+    tx.finish();
+    
     tx = graphdb.beginTx();
     node = graphdb.getNodeById(id);
     node.getProperty("test");
     // New nodes should have a "uuid" property
     node.getProperty("uuid");
     tx.success();
+    tx.finish();
   }
 }

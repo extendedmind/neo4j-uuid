@@ -37,7 +37,7 @@ public class UUIDTransactionEventHandler<T> implements TransactionEventHandler<T
       for (Node node : createdNodes){
         System.out.println("NODE FOUND");        
       }
-      populateUuidsFor(data.createdNodes());
+      populateUuidsFor(createdNodes);
       populateUuidsFor(data.createdRelationships());
       System.out.println("UUIDTransactionEventHandler.beforeCommit end");
       
