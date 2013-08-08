@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.kernel.extension.KernelExtensionFactory;
 
@@ -21,19 +19,6 @@ public class UUIDKernelExtensionTest extends UUIDTestBase {
         .newEmbeddedDatabaseBuilder(TEST_DATA_STORE_DESTINATION)
         .newGraphDatabase();
 
-    Transaction tx = graphdb.beginTx();
-    Node node = graphdb.createNode();
-    node.setProperty("test", "test");
-    long id = node.getId();
-    tx.success();
-    tx.finish();
-
-    tx = graphdb.beginTx();
-    node = graphdb.getNodeById(id);
-    node.getProperty("test");
-    // New nodes should have a "uuid" property
-    node.getProperty("uuid");
-    tx.success();
-    tx.finish();
+    super.checkUUIDCreation(graphdb);
   }
 }

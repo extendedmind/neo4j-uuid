@@ -48,7 +48,7 @@
       <version>${neo4j.version}</version>
     </dependency>
 
-    <!-- JUnit -->
+    <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -61,6 +61,12 @@
       <version>1.6</version>
       <type>jar</type>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j.app</groupId>
+      <artifactId>neo4j-server</artifactId>
+      <version>${neo4j.version}</version>
+      <scope>test</scope>    
     </dependency>
 
   </dependencies>
