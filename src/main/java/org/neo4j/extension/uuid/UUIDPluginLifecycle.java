@@ -1,46 +1,27 @@
 package org.neo4j.extension.uuid;
 
-import org.apache.commons.configuration.Configuration;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.PropertyContainer;
-import org.neo4j.graphdb.index.AutoIndexer;
-import org.neo4j.graphdb.index.IndexManager;
-import org.neo4j.server.plugins.Injectable;
-import org.neo4j.server.plugins.PluginLifecycle;
-
 import java.util.Collection;
 import java.util.Collections;
 
+import org.apache.commons.configuration.Configuration;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.server.plugins.Injectable;
+import org.neo4j.server.plugins.PluginLifecycle;
+
 /**
- * implementation of {@see PluginLifecycle} that sets up autoindexing for UUID property and registers the {@see UUIDTransactionEventHandler}.
+ * implementation of {@see PluginLifecycle} that sets up autoindexing for UUID
+ * property and registers the {@see UUIDTransactionEventHandler}.
  */
 public class UUIDPluginLifecycle implements PluginLifecycle {
-    public UUIDPluginLifecycle() {
-    	System.out.println("UUIDPluginLifecycle.UUIDPluginLifecycle");
-    }
 
-    @Override
-    public Collection<Injectable<?>> start(GraphDatabaseService graphDatabaseService, Configuration config) {
-    		System.out.println("UUIDPluginLifecycle.start begin");
+  @Override
+  public Collection<Injectable<?>> start(GraphDatabaseService graphDatabaseService, Configuration config) {
+    UUIDBase.start(graphDatabaseService);
+    return Collections.emptySet();
+  }
 
-        IndexManager indexManager = graphDatabaseService.index();
-        setupUUIDIndexing(indexManager.getNodeAutoIndexer());
-        setupUUIDIndexing(indexManager.getRelationshipAutoIndexer());
-        graphDatabaseService.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>());
-
-        System.out.println("UUIDPluginLifecycle.start end");
-
-        return Collections.emptySet();
-    }
-
-    @Override
-    public void stop() {
-        // intentionally empty
-    }
-
-    void setupUUIDIndexing(AutoIndexer<? extends PropertyContainer> autoIndexer) {
-        autoIndexer.startAutoIndexingProperty(UUIDTransactionEventHandler.UUID_PROPERTY_NAME);
-        autoIndexer.setEnabled(true);
-        System.out.println("UUIDPluginLifecycle.setupUUIDIndexing");
-    }
+  @Override
+  public void stop() {
+    // intentionally empty
+  }
 }
