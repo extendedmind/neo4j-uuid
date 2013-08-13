@@ -1,5 +1,6 @@
 package org.neo4j.extension.uuid;
 
+import java.nio.ByteBuffer;
 import java.util.UUID;
 
 import org.neo4j.graphdb.Node;
@@ -7,6 +8,8 @@ import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.event.PropertyEntry;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * a {@see TransactionEventHandler} that
@@ -47,10 +50,11 @@ public class UUIDTransactionEventHandler<T> implements
     for (PropertyContainer propertyContainer : propertyContainers) {
       if (!propertyContainer.hasProperty(UUID_PROPERTY_NAME)) {
         final UUID uuid = UUID.randomUUID();
-        final StringBuilder sb = new StringBuilder();
-        sb.append(Long.toHexString(uuid.getMostSignificantBits())).append(
-            Long.toHexString(uuid.getLeastSignificantBits()));
-        propertyContainer.setProperty(UUID_PROPERTY_NAME, sb.toString());
+        ByteBuffer bb = ByteBuffer.allocate(16);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+        String base64UUID = Base64.encodeBase64String(bb.array()).substring(0, 22);
+        propertyContainer.setProperty(UUID_PROPERTY_NAME, base64UUID);
       }
     }
   }
