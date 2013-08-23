@@ -16,7 +16,7 @@ public class UUIDPluginLifecycle implements PluginLifecycle {
 
   @Override
   public Collection<Injectable<?>> start(GraphDatabaseService graphDatabaseService, Configuration config) {
-    UUIDBase.start(graphDatabaseService, true, true);
+    UUIDBase.start(graphDatabaseService, true, true, true);
     return Collections.emptySet();
   }
 

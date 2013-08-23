@@ -7,13 +7,13 @@ import org.neo4j.graphdb.index.IndexManager;
 
 public abstract class UUIDBase {
 
-  static void start(GraphDatabaseService graphDatabaseService, boolean checkForUuidChanges, boolean setupAutoIndexing){
+  static void start(GraphDatabaseService graphDatabaseService, boolean updateRelationships, boolean checkForUuidChanges, boolean setupAutoIndexing){
     IndexManager indexManager = graphDatabaseService.index();
     if (setupAutoIndexing){
       setupUUIDIndexing(indexManager.getNodeAutoIndexer());
       setupUUIDIndexing(indexManager.getRelationshipAutoIndexer());
     }
-    graphDatabaseService.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>(checkForUuidChanges));
+    graphDatabaseService.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>(updateRelationships, checkForUuidChanges));
   }
   
   static void setupUUIDIndexing(AutoIndexer<? extends PropertyContainer> autoIndexer) {

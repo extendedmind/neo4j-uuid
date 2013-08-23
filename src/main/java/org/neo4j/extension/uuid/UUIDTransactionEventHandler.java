@@ -23,9 +23,11 @@ public class UUIDTransactionEventHandler<T> implements
 
   public static final String UUID_PROPERTY_NAME = "uuid";
 
+  private boolean updateRelationships = false;
   private boolean checkForUuidChanges = false;
   
-  public UUIDTransactionEventHandler(boolean checkForUuidChanges){
+  public UUIDTransactionEventHandler(boolean updateRelationships, boolean checkForUuidChanges){
+    this.updateRelationships = updateRelationships;
     this.checkForUuidChanges = checkForUuidChanges;
   }
   
@@ -39,7 +41,8 @@ public class UUIDTransactionEventHandler<T> implements
     }
     Iterable<Node> createdNodes = data.createdNodes();
     populateUuidsFor(createdNodes);
-    populateUuidsFor(data.createdRelationships());
+    if(updateRelationships)
+      populateUuidsFor(data.createdRelationships());
     return null;
   }
 
