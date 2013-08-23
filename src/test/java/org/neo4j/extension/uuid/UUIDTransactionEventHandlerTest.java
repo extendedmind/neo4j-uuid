@@ -10,7 +10,7 @@ public class UUIDTransactionEventHandlerTest extends UUIDTestBase{
   public void shouldCreateUUIDToNewNode() {
     GraphDatabaseService graphdb = new GraphDatabaseFactory()
         .newEmbeddedDatabaseBuilder(TEST_DATA_STORE_DESTINATION).newGraphDatabase();
-    graphdb.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>());
+    graphdb.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>(true));
     super.checkUUIDCreation(graphdb);    
   }
 

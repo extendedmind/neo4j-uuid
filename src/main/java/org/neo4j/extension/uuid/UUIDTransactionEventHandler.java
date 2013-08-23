@@ -23,12 +23,20 @@ public class UUIDTransactionEventHandler<T> implements
 
   public static final String UUID_PROPERTY_NAME = "uuid";
 
+  private boolean checkForUuidChanges = false;
+  
+  public UUIDTransactionEventHandler(boolean checkForUuidChanges){
+    this.checkForUuidChanges = checkForUuidChanges;
+  }
+  
   @Override
   public T beforeCommit(TransactionData data) throws Exception {
-    checkForUuidChanges(data.removedNodeProperties(), "remove");
-    checkForUuidChanges(data.assignedNodeProperties(), "assign");
-    checkForUuidChanges(data.removedRelationshipProperties(), "remove");
-    checkForUuidChanges(data.assignedRelationshipProperties(), "assign");
+    if (checkForUuidChanges){
+      checkForUuidChanges(data.removedNodeProperties(), "remove");
+      checkForUuidChanges(data.assignedNodeProperties(), "assign");
+      checkForUuidChanges(data.removedRelationshipProperties(), "remove");
+      checkForUuidChanges(data.assignedRelationshipProperties(), "assign");
+    }
     Iterable<Node> createdNodes = data.createdNodes();
     populateUuidsFor(createdNodes);
     populateUuidsFor(data.createdRelationships());

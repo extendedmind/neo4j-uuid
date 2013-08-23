@@ -7,11 +7,11 @@ import org.neo4j.graphdb.index.IndexManager;
 
 public abstract class UUIDBase {
 
-  static void start(GraphDatabaseService graphDatabaseService){
+  static void start(GraphDatabaseService graphDatabaseService, boolean checkForUuidChanges){
     IndexManager indexManager = graphDatabaseService.index();
     setupUUIDIndexing(indexManager.getNodeAutoIndexer());
     setupUUIDIndexing(indexManager.getRelationshipAutoIndexer());
-    graphDatabaseService.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>());
+    graphDatabaseService.registerTransactionEventHandler(new UUIDTransactionEventHandler<String>(checkForUuidChanges));
   }
   
   static void setupUUIDIndexing(AutoIndexer<? extends PropertyContainer> autoIndexer) {
