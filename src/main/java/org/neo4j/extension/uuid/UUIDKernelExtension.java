@@ -7,15 +7,18 @@ public class UUIDKernelExtension extends LifecycleAdapter{
   
   private final GraphDatabaseService gdb;
   private boolean checkForUuidChanges = false;
+  private boolean setupAutoIndexing = false;
+
   
-  public UUIDKernelExtension(GraphDatabaseService gdb, boolean checkForUuidChanges){
+  public UUIDKernelExtension(GraphDatabaseService gdb, boolean checkForUuidChanges, boolean setupAutoIndexing){
     this.gdb = gdb;
     this.checkForUuidChanges = checkForUuidChanges;
+    this.setupAutoIndexing = setupAutoIndexing;
   }
   
   @Override
   public void start() throws Throwable{
-    UUIDBase.start(this.gdb, this.checkForUuidChanges);
+    UUIDBase.start(this.gdb, this.checkForUuidChanges, this.setupAutoIndexing);
   }
 
 }

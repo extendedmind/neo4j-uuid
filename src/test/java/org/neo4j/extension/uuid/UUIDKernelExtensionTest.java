@@ -13,7 +13,7 @@ public class UUIDKernelExtensionTest extends UUIDTestBase {
   @Test
   public void shouldCreateUUIDToNewNode() {    
     List<KernelExtensionFactory<?>> extensions = new ArrayList<KernelExtensionFactory<?>>(1); 
-    extensions.add(new UUIDKernelExtensionFactory(true));
+    extensions.add(new UUIDKernelExtensionFactory(true, true));
     GraphDatabaseService graphdb = new GraphDatabaseFactory()
         .addKernelExtensions(extensions)
         .newEmbeddedDatabaseBuilder(TEST_DATA_STORE_DESTINATION)

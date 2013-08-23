@@ -7,18 +7,21 @@ import org.neo4j.kernel.lifecycle.Lifecycle;
 public class UUIDKernelExtensionFactory extends KernelExtensionFactory<UUIDKernelExtensionFactory.Dependencies>
 {
     private boolean checkForUuidChanges = false;
+    private boolean setupAutoIndexing = false;
 
+    
     public interface Dependencies{
         GraphDatabaseService getDatabase();
     }
 
-    public UUIDKernelExtensionFactory(boolean checkForUuidChanges){
+    public UUIDKernelExtensionFactory(boolean checkForUuidChanges, boolean setupAutoIndexing){
         super( "uuid" );
         this.checkForUuidChanges = checkForUuidChanges;
+        this.setupAutoIndexing = setupAutoIndexing;
     }
 
     @Override
     public Lifecycle newKernelExtension( Dependencies dependencies ) throws Throwable {
-        return new UUIDKernelExtension(dependencies.getDatabase(), checkForUuidChanges);
+        return new UUIDKernelExtension(dependencies.getDatabase(), checkForUuidChanges, setupAutoIndexing);
     }
 }
