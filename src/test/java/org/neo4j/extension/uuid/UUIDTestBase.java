@@ -21,20 +21,19 @@ public class UUIDTestBase {
   }
   
   protected void checkUUIDCreation(GraphDatabaseService graphdb){
-    Transaction tx = graphdb.beginTx();
-    Node node = graphdb.createNode();
-    node.setProperty("test", "test");
-    long id = node.getId();
-    tx.success();
-    tx.finish();
-
-    tx = graphdb.beginTx();
-    node = graphdb.getNodeById(id);
-    node.getProperty("test");
-    // New nodes should have a "uuid" property
-    node.getProperty("uuid");
-    tx.success();
-    tx.finish();
-   
+    long id = 0;
+    try(Transaction tx = graphdb.beginTx()){
+      Node node = graphdb.createNode();
+      node.setProperty("test", "test");
+      id = node.getId();
+      tx.success();
+    }    
+    try(Transaction tx = graphdb.beginTx()){
+      Node node = graphdb.getNodeById(id);
+      node.getProperty("test");
+      // New nodes should have a "uuid" property
+      node.getProperty("uuid");
+      tx.success();
+    }
   }
 }
