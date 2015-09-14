@@ -60,14 +60,17 @@ public class UUIDTransactionEventHandler<T> implements
   private void populateUuidsFor(Iterable<? extends PropertyContainer> propertyContainers) {
     for (PropertyContainer propertyContainer : propertyContainers) {
       if (!propertyContainer.hasProperty(UUID_PROPERTY_NAME)) {
-        final UUID uuid = UUID.randomUUID();
-        ByteBuffer bb = ByteBuffer.allocate(16);
-        bb.putLong(uuid.getMostSignificantBits());
-        bb.putLong(uuid.getLeastSignificantBits());
-        String base64UUID = Base64.encodeBase64String(bb.array()).substring(0, 22);
-        propertyContainer.setProperty(UUID_PROPERTY_NAME, base64UUID);
+    	final UUID uuid = UUID.randomUUID();  
+        propertyContainer.setProperty(UUID_PROPERTY_NAME, getTrimmedBase64UUID(uuid));
       }
     }
+  }
+  
+  private synchronized String getTrimmedBase64UUID(final UUID uuid){
+    ByteBuffer bb = ByteBuffer.allocate(16);
+    bb.putLong(uuid.getMostSignificantBits());
+    bb.putLong(uuid.getLeastSignificantBits());
+    return Base64.encodeBase64String(bb.array()).substring(0, 22);  
   }
 
   private void checkForUuidChanges(Iterable<? extends PropertyEntry<? extends PropertyContainer>> changeList, 
