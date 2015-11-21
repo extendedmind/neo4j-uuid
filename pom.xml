@@ -6,7 +6,7 @@
   <artifactId>neo4j-uuid</artifactId>
   <packaging>jar</packaging>
   <name>Neo4j UUID</name>
-  <version>2.2.5.1</version>
+  <version>2.2.7</version>
   <description>Neo4j UUID</description>
   <url>https://github.com/extendedmind/neo4j-uuid</url>
   <inceptionYear>2013</inceptionYear>
@@ -27,7 +27,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <neo4j.version>2.2.5</neo4j.version>
+    <neo4j.version>${project.version}</neo4j.version>
   </properties>
 
   <repositories>
